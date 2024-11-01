@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "NetSuite Color Options",
+  "version": "1.0",
+  "permissions": [
+    "storage",
+    "*://*.netsuite.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://7243063-sb1.app.netsuite.com/*"],
+      "css": ["styles.css"],
+      "js": ["content.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
+}
