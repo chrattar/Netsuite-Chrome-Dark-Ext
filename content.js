@@ -1,22 +1,33 @@
+// Immediately inject initial styles
+document.documentElement.style.setProperty('display', 'none');
+
 function applyTheme() {
-    chrome.storage.sync.get(['linkColor', 'bgColor', 'textColor'], (data) => {
+    chrome.storage.sync.get(['linkColor', 'bgColor', 'textColor', 'smallGreyTextNoLink'], (data) => {
         const style = document.createElement('style');
         style.textContent = `
-            body, * { 
-                background-color: ${data.bgColor || '#000000'} !important; 
+            html, body {
+                display: block !important;
+                transition: background-color 0.1s ease;
             }
-
-            a { 
-                background-color: transparent !important;
-                color: ${data.linkColor || '#00ff00'} !important;
+            body, * {
+                background-color: ${data.bgColor || '#000000'} !important;
             }
-
             p, span, div, h1, h2, h3, h4, h5, h6,
             td.rptdata,
             td[style*="color"],
             [style*="color: #060606"],
-            .rptdata { 
-                color: ${data.textColor || '#ffffff'} !important; 
+            .rptdata {
+                color: ${data.textColor || '#ffffff'} !important;
+                transition: color 0.1s ease;
+            }
+            a {
+                background-color: transparent !important;
+                color: ${data.linkColor || '#00ff00'} !important;
+                transition: color 0.1s ease;
+            }
+            a.smallgraytextnolink.uir-no-link {
+                color: ${data.smallGreyTextNoLink || '#38b5ab'} !important;
+                transition: color 0.1s ease;
             }
         `;
         
@@ -25,23 +36,16 @@ function applyTheme() {
         if (existingStyle) {
             existingStyle.remove();
         }
-
+        
         // Add ID to new style element
         style.id = 'netsuite-theme';
         document.head.appendChild(style);
     });
 }
 
-// Apply theme initially
-applyTheme();
-
-// Create observer to reapply theme when DOM changes
-const observer = new MutationObserver(() => {
+// Run as early as possible
+if (document.documentElement) {
     applyTheme();
-});
-
-// Start observing
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+} else {
+    document.addEventListener('DOMContentLoaded', applyTheme);
+}
