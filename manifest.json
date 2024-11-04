@@ -10,7 +10,8 @@
     {
       "matches": ["https://7243063-sb1.app.netsuite.com/*"],
       "css": ["styles.css"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_start"
     }
   ],
   "options_ui": {
